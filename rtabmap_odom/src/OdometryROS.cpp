@@ -814,6 +814,7 @@ void OdometryROS::processData(SensorData & data, const std_msgs::Header & header
 	}
 	else // pose is null / lost
 	{
+		// ROS_WARN_STREAM("null pose " << resetCurrentCount_ << " " << resetCountdown_);
 		if(publishNullWhenLost_)
 		{
 			//NODELET_WARN( "Odometry lost!");
@@ -948,7 +949,7 @@ void OdometryROS::processData(SensorData & data, const std_msgs::Header & header
 			}
 			else
 			{
-				NODELET_INFO( "Odom: quality=%d, std dev=%fm|%frad, update time=%fs", info.reg.inliers, pose.isNull()?0.0f:std::sqrt(info.reg.covariance.at<double>(0,0)), pose.isNull()?0.0f:std::sqrt(info.reg.covariance.at<double>(5,5)), (ros::WallTime::now()-time).toSec());
+				NODELET_INFO_THROTTLE(4.0, "Odom: quality=%d, std dev=%fm|%frad, update time=%fs", info.reg.inliers, pose.isNull()?0.0f:std::sqrt(info.reg.covariance.at<double>(0,0)), pose.isNull()?0.0f:std::sqrt(info.reg.covariance.at<double>(5,5)), (ros::WallTime::now()-time).toSec());
 			}
 		}
 		else // if(icpParams_)
