@@ -499,9 +499,11 @@ void OdometryROS::processData(SensorData & data, const std_msgs::Header & header
 	{
 		if(previousStamp_>0.0 && previousStamp_ >= header.stamp.toSec())
 		{
+      // TODO(lucasw) if this happens several samples in row then reset, but for now reset immediately
 			NODELET_WARN("Odometry: Detected not valid consecutive stamps (previous=%fs new=%fs). "
-					"New stamp should be always greater than previous stamp. This new data is ignored.",
+					"New stamp should be always greater than previous stamp. This new data is ignored, resetting.",
 					previousStamp_, header.stamp.toSec());
+      previousStamp_ = 0.0;
 			return;
 		}
 		else if(maxUpdateRate_ > 0 &&
