@@ -209,13 +209,29 @@ void toCvShare(const rtabmap_msgs::RGBDImage & image, const boost::shared_ptr<vo
 	}
 }
 
-void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & msg, const std::string & sensorFrameId)
+rtabmap::Transform getLocalTransform(const rtabmap::SensorData & data)
+{
+	rtabmap::Transform localTransform;
+	if(data.cameraModels().size() == 1)
+	{
+		//rgb+depth
+		localTransform = data.cameraModels().front().localTransform();
+	}
+	else if(data.stereoCameraModels().size() == 1)
+	{
+		//stereo
+		localTransform = data.stereoCameraModels()[0].localTransform();
+	}
+  return localTransform;
+}
+
+void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_ros::RGBDImage & msg, const std::string & sensorFrameId)
 {
 	std_msgs::Header header;
 	header.frame_id = sensorFrameId;
 	header.stamp = ros::Time(data.stamp());
-	rtabmap::Transform localTransform;
-	if(data.cameraModels().size()>1)
+
+  if(data.cameraModels().size()>1)
 	{
 		UERROR("Cannot convert multi-camera data to rgbd image");
 		return;
@@ -225,7 +241,6 @@ void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & 
 		//rgb+depth
 		rtabmap_conversions::cameraModelToROS(data.cameraModels().front(), msg.rgb_camera_info);
 		msg.rgb_camera_info.header = header;
-		localTransform = data.cameraModels().front().localTransform();
 	}
 	else if(data.stereoCameraModels().size() == 1)
 	{
@@ -234,7 +249,6 @@ void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & 
 		rtabmap_conversions::cameraModelToROS(data.stereoCameraModels()[0].right(), msg.depth_camera_info);
 		msg.rgb_camera_info.header = header;
 		msg.depth_camera_info.header = header;
-		localTransform = data.stereoCameraModels()[0].localTransform();
 	}
 
 	if(!data.imageRaw().empty())
@@ -272,6 +286,7 @@ void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & 
 	}
 	if(!data.keypoints3D().empty())
 	{
+		const auto localTransform = getLocalTransform(data);
 		rtabmap_conversions::points3fToROS(data.keypoints3D(), msg.points, localTransform.inverse());
 	}
 	if(!data.descriptors().empty())

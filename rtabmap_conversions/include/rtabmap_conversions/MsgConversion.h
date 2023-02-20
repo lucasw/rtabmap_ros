@@ -78,6 +78,8 @@ void toCvShare(const rtabmap_msgs::RGBDImage & image, const boost::shared_ptr<vo
 void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & msg, const std::string & sensorFrameId);
 rtabmap::SensorData rgbdImageFromROS(const rtabmap_msgs::RGBDImageConstPtr & image);
 
+rtabmap::Transform getLocalTransform(const rtabmap::SensorData & data);
+
 // copy data
 void compressedMatToBytes(const cv::Mat & compressed, std::vector<unsigned char> & bytes);
 cv::Mat compressedMatFromBytes(const std::vector<unsigned char> & bytes, bool copy = true);

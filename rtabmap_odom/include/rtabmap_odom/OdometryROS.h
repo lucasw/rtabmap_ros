@@ -123,6 +123,7 @@ private:
 	ros::Publisher odomLocalScanMap_;
 	ros::Publisher odomLastFrame_;
 	ros::Publisher odomRgbdImagePub_;
+	ros::Publisher odomKeyPointsPub_;
 	ros::ServiceServer resetSrv_;
 	ros::ServiceServer resetToPoseSrv_;
 	ros::ServiceServer pauseSrv_;
