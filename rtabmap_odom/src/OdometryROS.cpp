@@ -942,10 +942,10 @@ void OdometryROS::processData(SensorData & data, const std_msgs::Header & header
 
 	if(!data.imageRaw().empty()) {
 		if(!header.frame_id.empty()) {
-			rtabmap_ros::RGBDImage msg;
-			rtabmap_ros::keypointsToROS(data.keypoints(), msg.key_points);
-			const auto localTransform = rtabmap_ros::getLocalTransform(data);
-			rtabmap_ros::points3fToROS(data.keypoints3D(), msg.points, localTransform.inverse());
+			rtabmap_msgs::RGBDImage msg;
+			rtabmap_conversions::keypointsToROS(data.keypoints(), msg.key_points);
+			const auto localTransform = rtabmap_conversions::getLocalTransform(data);
+			rtabmap_conversions::points3fToROS(data.keypoints3D(), msg.points, localTransform.inverse());
 			// TODO(lucasw) also publish descriptors?
 			msg.header = header; // use corresponding time stamp to image
 			ROS_INFO_STREAM_THROTTLE(4.0, msg.key_points.size() << " 2d points, " << msg.points.size() << " 3d points");
