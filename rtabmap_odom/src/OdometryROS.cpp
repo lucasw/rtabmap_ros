@@ -902,6 +902,7 @@ void OdometryROS::processData(SensorData & data, const std_msgs::Header & header
 	{
 		rtabmap_msgs::OdomInfo infoMsg;
 		rtabmap_conversions::odomInfoToROS(info, infoMsg, odomInfoPub_.getNumSubscribers()==0);
+    // TODO(lucasw) look for a small offset here
 		infoMsg.header.stamp = header.stamp; // use corresponding time stamp to image
 		infoMsg.header.frame_id = odomFrameId_;
 		if(odomInfoPub_.getNumSubscribers()>0) {
