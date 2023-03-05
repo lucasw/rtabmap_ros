@@ -225,7 +225,7 @@ rtabmap::Transform getLocalTransform(const rtabmap::SensorData & data)
   return localTransform;
 }
 
-void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_ros::RGBDImage & msg, const std::string & sensorFrameId)
+void rgbdImageToROS(const rtabmap::SensorData & data, rtabmap_msgs::RGBDImage & msg, const std::string & sensorFrameId)
 {
 	std_msgs::Header header;
 	header.frame_id = sensorFrameId;
